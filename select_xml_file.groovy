@@ -1,6 +1,6 @@
 //import org.boon.Boon;
 def manifest_files = "git@10.240.205.131:nfv/manifests.git"
-def shell = "cd `mkdir -d`;git clone ${manifest_files}"
+def shell = "cd `mktemp -d`&&git clone ${manifest_files}"
 println(shell)
 def git_clone = shell.execute()
 git_clone.waitFor()
