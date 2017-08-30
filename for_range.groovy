@@ -4,8 +4,7 @@ class Song{
     def name
     def artist
     def genre
-    String toString(){
-        "${name}, ${artist}, ${getGenre()}"
+    String toString(){ "${name}, ${artist}, ${getGenre()}"
     }
     def getGenre(){
         genre.toUpperCase()
