@@ -7,11 +7,11 @@ def manifest_files = "git@10.240.205.131:nfv/manifests.git"
 def tmp_shell = "mktemp -d".execute()
 def tmp_dir = tmp_shell.text.split("\n")[0]
 def shell  = "/usr/bin/git clone ${manifest_files} ${tmp_dir}"
-try{
-    def clone_git = shell.execute()
-    println(clone_git.text)
-} catch(Exception e){
-    println e1
+def clone_git = shell.execute()
+println(clone_git.text)
+def dir = new File(tmp_dir)
+dir.eachFileMatch{
+    println it.getName()
 }
 //def jsonEditorOptions = Boon.fromJson(/{
 //        disable_edit_json: true,
