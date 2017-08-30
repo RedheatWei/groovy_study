@@ -2,7 +2,8 @@
 def manifest_files = "git@10.240.205.131:nfv/manifests.git"
 def shell = "cd `mkdir -d`;git clone ${manifest_files}"
 println(shell)
-Process git_clone = shell.execute()
+def git_clone = shell.execute()
+git_clone.waitFor()
 println(git_clone.text)
 //def jsonEditorOptions = Boon.fromJson(/{
 //        disable_edit_json: true,
