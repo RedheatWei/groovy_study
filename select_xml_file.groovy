@@ -2,7 +2,7 @@
 def manifest_files = "git@10.240.205.131:nfv/manifests.git"
 def shell = "cd `mktemp -d`&&git clone ${manifest_files}"
 println(shell)
-def git_clone = shell.execute()
+Process git_clone = shell.execute()
 git_clone.waitFor()
 println(git_clone.text)
 //def jsonEditorOptions = Boon.fromJson(/{
