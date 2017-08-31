@@ -2,10 +2,12 @@
 def execute(cmd){
     def proc = cmd.execute()
     proc.waitFor()
+    return proc
 }
 def getTmpDir(){
     def tmp_shell = execute("mktemp -d")
     def tmp_dir = tmp_shell.text.split("\n")[0]
+    return tmp_dir
 }
 def cloneManifest(tmp_dir){
     def manifest_files = "git@10.240.205.131:nfv/manifests.git"
@@ -13,17 +15,19 @@ def cloneManifest(tmp_dir){
     def clone_git = execute(shell)
     println(clone_git.text)
 }
-def getXmlFiles(){
-//    def find_shell = "find -name '*.xml'"
-//    println(find_shell)
-//    def file_list = find_shell.execute(null,new File(tmp_dir))
-//    file_list.waitFor()
-    def process=new ProcessBuilder("find -name '*.xml'").redirectErrorStream(true).start()
-    process.inputStream.eachLine {println it}
+def getXmlFiles(tmp_dir){
+    def find_shell = "find ${tmp_dir} -name *.xml"
+    println(find_shell)
+    def outputStream = new StringBuffer();
+    def proc = find_shell.execute()
+    proc.waitForProcessOutput(outputStream, System.err);
+    def file_str = outputStream.toString()
+    return file_str.split("\n")
 }
 tmp_dir = getTmpDir()
 cloneManifest(tmp_dir)
-getXmlFiles()
+println getXmlFiles(tmp_dir)
+
 
 //def jsonEditorOptions = Boon.fromJson(/{
 //        disable_edit_json: true,
