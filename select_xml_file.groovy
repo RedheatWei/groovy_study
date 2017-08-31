@@ -1,4 +1,4 @@
-//import org.boon.Boon;
+import org.boon.Boon;
 def execute(cmd){
     def proc = cmd.execute()
     proc.waitFor()
@@ -35,28 +35,27 @@ def changeToNeed(tmp_dir,file_list){
 tmp_dir = getTmpDir()
 cloneManifest(tmp_dir)
 file_list = getXmlFiles(tmp_dir)
-println changeToNeed(tmp_dir,file_list)
+file_name_list = changeToNeed(tmp_dir,file_list)
 
-//def jsonEditorOptions = Boon.fromJson(/{
-//        disable_edit_json: true,
-//        disable_properties: true,
-//        no_additional_properties: true,
-//        disable_collapse: true,
-//        disable_array_add: true,
-//        disable_array_delete: true,
-//        disable_array_reorder: true,
-//        theme: "bootstrap2",
-//        iconlib:"fontawesome4",
-//        schema: {
-//          type: "object",
-//          properties: {
-//            year: {
-//              type: "string",
-//              enum: [
-//                ${git_clone.text}
-//              ],
-//              default: 2008
-//            }
-//          }
-//        }
-//}/);
+def jsonEditorOptions = Boon.fromJson(/{
+        disable_edit_json: true,
+        disable_properties: true,
+        no_additional_properties: true,
+        disable_collapse: true,
+        disable_array_add: true,
+        disable_array_delete: true,
+        disable_array_reorder: true,
+        theme: "bootstrap2",
+        iconlib:"fontawesome4",
+        schema: {
+          type: "object",
+          properties: {
+            year: {
+              type: "string",
+              enum: ${file_name_list}
+              default: 2008
+            }
+          }
+        }
+}/);
+return jsonEditorOptions
