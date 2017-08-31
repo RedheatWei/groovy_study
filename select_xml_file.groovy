@@ -24,10 +24,15 @@ def getXmlFiles(tmp_dir){
     def file_str = outputStream.toString()
     return file_str.split("\n")
 }
+def changeToNeed(file_list){
+    file_list.each{file_path ->
+        println(file_path)
+    }
+}
 tmp_dir = getTmpDir()
 cloneManifest(tmp_dir)
-println getXmlFiles(tmp_dir)
-
+file_list = getXmlFiles(tmp_dir)
+changeToNeed(file_list)
 
 //def jsonEditorOptions = Boon.fromJson(/{
 //        disable_edit_json: true,
