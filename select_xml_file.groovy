@@ -33,11 +33,15 @@ def changeToNeed(tmp_dir,file_list){
     }
     return file_name_list
 }
+def deleteTmpDir(tmp_dir){
+    def dir_res = new File(tmp_dir)
+    dir_res.deleteDir()
+}
 tmp_dir = getTmpDir()
 cloneManifest(tmp_dir,manifest_files)
 file_list = getXmlFiles(tmp_dir)
 file_name_list = changeToNeed(tmp_dir,file_list).reverse()
-
+deleteTmpDir(tmp_dir)
 def jsonEditorOptions = Boon.fromJson(/{
         disable_edit_json: true,
         disable_properties: true,
@@ -49,13 +53,9 @@ def jsonEditorOptions = Boon.fromJson(/{
         theme: "bootstrap2",
         iconlib:"fontawesome4",
         schema: {
-          type: "object",
-          properties: {
-            year: {
-              type: "string",
-              enum: ${file_name_list}
-              default: 2008
-            }
+          title:""
+          type: "string",
+          enum: ${file_name_list}
           }
         }
 }/);
