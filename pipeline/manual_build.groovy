@@ -1,18 +1,19 @@
 #!/usr/bin/env groovy
-def MANIFESTS = MANIFESTS_FILE.replace('"',"") //nfv_master.xml
-def manifest_file = MANIFESTS.split(/\./)[0] //nfv_master
+def MANIFESTS = MANIFESTS_FILE.replace('"',"").replace("FILE_","") //${group_name}_master.xml
+def manifest_file = MANIFESTS.split(/\./)[0] //${group_name}_master
 def remmote_host = '10.240.205.131' //远程git ip
 def local_host = '10.100.218.203' //本地git ip
 def manifests_name = 'manifests'  //程序集文件项目名称
+def group_name = 'thinkcloud_ci'  //项目组名称
 def sync_script = '/data/python_project/git-sync/sync-no-change.py'
 def mode = "manual" //手动构建
 Date date = new Date()
 def time = date.format("yyyy-MM-dd")
 def workspace_dir = "thinkcloud/${manifest_file}/${BUILD_ID}" //在Jenkins里创建的目录
-def iso_dir = "/opt/ThinkCloud_iso/nfv/${JOB_NAME}/${manifest_file}/${mode}/${time}" //镜像存放目录
-def url = "http://10.100.218.203:8099/nfv/${JOB_NAME}/${manifest_file}/${mode}/${time}"
-def remote_git = "git@${remmote_host}:nfv/${manifests_name}.git" //远程git仓库
-def local_git = "git@${local_host}:nfv/${manifests_name}.git" //本地git仓库
+def iso_dir = "/opt/ThinkCloud_iso/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}" //镜像存放目录
+def url = "http://10.100.218.203:8099/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}"
+def remote_git = "git@${remmote_host}:${group_name}/${manifests_name}.git" //远程git仓库
+def local_git = "git@${local_host}:${group_name}/${manifests_name}.git" //本地git仓库
 pipeline {
     agent any
     stages {

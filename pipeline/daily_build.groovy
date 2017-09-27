@@ -3,15 +3,22 @@ def MANIFESTS_LIST = ["nfv_master.xml","nfv_dev.xml"]
 def mode = "daily" //手动构建
 Date date = new Date()
 def time = date.format("yyyy-MM-dd")
-def remote_git = "git@10.240.205.131:nfv/manifests.git" //远程git仓库
-def local_git = "git@10.100.218.203:nfv/manifests.git" //本地git仓库
+def manifests_name = 'manifests'  //程序集文件项目名称
+def sync_script = '/data/python_project/git-sync/sync-no-change.py'
+def group_name = 'thinkcloud_ci'  //项目组名称
+
+def remmote_host = '10.240.205.131' //远程git ip
+def local_host = '10.100.218.203' //本地git ip
+
+def remote_git = "git@${remmote_host}:${group_name}/${manifests_name}.git" //远程git仓库
+def local_git = "git@${local_host}:${group_name}/${manifests_name}.git" //本地git仓库
 def UPDATE_GITLAB = "true"
 
 MANIFESTS_LIST.each{ MANIFESTS ->
     def manifest_file = MANIFESTS.split(/\./)[0]
     def workspace_dir = "thinkcloud/${manifest_file}/${BUILD_ID}" //在Jenkins里创建的目录
-    def iso_dir = "/opt/ThinkCloud_iso/nfv/${JOB_NAME}/${manifest_file}/${mode}/${time}" //镜像存放目录
-    def url = "http://10.100.218.203:8099/nfv/${JOB_NAME}/${manifest_file}/${mode}/${time}"
+    def iso_dir = "/opt/ThinkCloud_iso/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}" //镜像存放目录
+    def url = "http://10.100.218.203:8099/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}"
     pipeline {
         agent any
         stages {
@@ -19,14 +26,14 @@ MANIFESTS_LIST.each{ MANIFESTS ->
                 steps{
                     script{
                         if(UPDATE_GITLAB == "true"){
-                            sh "python /data/python_project/git-sync/sync-by-bash.py ${remote_git} ${MANIFESTS}"
+                            sh "python ${sync_script} ${remote_git} ${MANIFESTS}"
                         }
                     }
                 }
             }
             stage("download code"){
                 steps{
-                    sh "[[ -d ${workspace_dir} ]] || mkdir -p ${workspace_dir};cd ${workspace_dir};repo init -u ${local_git} -m ${MANIFESTS};repo sync"
+                    sh "[[ -d ${workspace_dir} ]] || mkdir -p ${workspace_dir};cd ${workspace_dir};repo init -u ${local_git} -m ${MANIFESTS};sed 's@${remmote_host}@${local_host}@g' -i .repo/${manifests_name}/${MANIFESTS};repo sync"
                 }
             }
             stage('build iso'){
