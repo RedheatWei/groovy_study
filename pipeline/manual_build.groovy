@@ -14,6 +14,7 @@ def iso_dir = "/opt/ThinkCloud_iso/${group_name}/${JOB_NAME}/${manifest_file}/${
 def url = "http://10.100.218.203:8099/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}"
 def remote_git = "git@${remmote_host}:${group_name}/${manifests_name}.git" //远程git仓库
 def local_git = "git@${local_host}:${group_name}/${manifests_name}.git" //本地git仓库
+def iso_name = "LenovoOpenStack-nfv_dev_4.1T_${mode}_${time}_${BUILD_ID}.iso"
 
 pipeline {
     // agent {label 'slave-1'}
@@ -45,6 +46,16 @@ pipeline {
                 sh "[[ -d ${iso_dir} ]] || mkdir -p ${iso_dir};cd ${workspace_dir};mv LenovoOpenStack*.iso ${iso_dir};chmod -R a+rx /opt/ThinkCloud_iso"
             }
         }
+        stage('scp iso'){
+            steps{
+                sh "scp ${iso_dir}/${iso_name} root@10.100.218.150:/tmp/ && ssh root@10.100.218.150 'echo ${iso_name} >> /tmp/iso_name.log'"
+            }
+        }
+//        stage('start deploy'){
+//            steps{
+//                sh "scp ${iso_dir}/${iso_name} root@10.100.218.150:/tmp/ && ssh root@10.100.218.150 'sh /tmp/Auto_TC-2.0/bin/run.sh /tmp/${iso_name} /tmp/ThinkCloud_license_trial_ha_ceph_till20171231.zip net1'"
+//            }
+//        }
     }
     post {
         failure {

@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
 def MANIFESTS_LIST = ["nfv_master.xml","nfv_dev.xml"]
-def mode = "daily" //daily build
 Date date = new Date()
 def time = date.format("yyyy-MM-dd")
 def manifests_name = 'manifests'  //程序集文件项目名称
@@ -13,6 +12,7 @@ def local_git = "git@${local_host}:${group_name}/${manifests_name}.git" //本地
 def UPDATE_GITLAB = "true"
 
 MANIFESTS_LIST.each{ MANIFESTS ->
+    def mode = "daily" //daily build
     def manifest_file = MANIFESTS.split(/\./)[0]
     def workspace_dir = "${BUILD_ID}/${manifest_file}/thinkcloud" //在Jenkins里创建的目录
     def iso_dir = "/opt/ThinkCloud_iso/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}" //镜像存放目录
