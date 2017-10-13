@@ -1,4 +1,6 @@
 #!/usr/bin/env groovy
+//don't use this one
+
 def MANIFESTS_LIST = ["nfv_master.xml","nfv_dev.xml"]
 def mode = "daily" //手动构建
 Date date = new Date()

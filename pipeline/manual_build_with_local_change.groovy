@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+//don't use this one
 def MANIFESTS = MANIFESTS_FILE.replace('"',"")
 def manifest_file = MANIFESTS.split(/\./)[0]
 def mode = "manual" //手动构建

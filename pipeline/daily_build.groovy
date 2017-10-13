@@ -1,22 +1,20 @@
 #!/usr/bin/env groovy
 def MANIFESTS_LIST = ["nfv_master.xml","nfv_dev.xml"]
-def mode = "daily" //手动构建
+def mode = "daily" //daily build
 Date date = new Date()
 def time = date.format("yyyy-MM-dd")
 def manifests_name = 'manifests'  //程序集文件项目名称
 def sync_script = '/data/python_project/git-sync/sync-no-change.py'
-def group_name = 'thinkcloud_ci'  //项目组名称
-
+def group_name = 'nfv'  //项目组名称
 def remmote_host = '10.240.205.131' //远程git ip
 def local_host = '10.100.218.203' //本地git ip
-
 def remote_git = "git@${remmote_host}:${group_name}/${manifests_name}.git" //远程git仓库
 def local_git = "git@${local_host}:${group_name}/${manifests_name}.git" //本地git仓库
 def UPDATE_GITLAB = "true"
 
 MANIFESTS_LIST.each{ MANIFESTS ->
     def manifest_file = MANIFESTS.split(/\./)[0]
-    def workspace_dir = "thinkcloud/${manifest_file}/${BUILD_ID}" //在Jenkins里创建的目录
+    def workspace_dir = "${BUILD_ID}/${manifest_file}/thinkcloud" //在Jenkins里创建的目录
     def iso_dir = "/opt/ThinkCloud_iso/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}" //镜像存放目录
     def url = "http://10.100.218.203:8099/${group_name}/${JOB_NAME}/${manifest_file}/${mode}/${time}"
     pipeline {
@@ -38,7 +36,7 @@ MANIFESTS_LIST.each{ MANIFESTS ->
             }
             stage('build iso'){
                 steps{
-                    sh "./${workspace_dir}/building/all_in_one.py -t ${mode} -n ${BUILD_ID}"
+                    sh "chmod 777 -R ${workspace_dir};cd ${workspace_dir};./building/all_in_one.py -t ${mode} -n ${BUILD_ID}"
                 }
             }
             stage('move iso'){
