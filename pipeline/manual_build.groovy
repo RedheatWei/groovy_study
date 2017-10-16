@@ -2,7 +2,7 @@
 def mode = BUILD_TYPE
 def MANIFESTS = MANIFESTS_FILE.replace('"',"") //nfv_master.xml
 def manifest_file = MANIFESTS.split(/\./)[0] //nfv_master
-def remmote_host = '10.240.205.131' //远程git ip
+def remmote_host = '10.240.200.5' //远程git ip
 def local_host = '10.100.218.203' //本地git ip
 def manifests_name = 'manifests'  //程序集文件项目名称
 def sync_script = '/data/python_project/git-sync/sync-no-change.py'
@@ -15,6 +15,10 @@ def url = "http://10.100.218.203:8099/${group_name}/${JOB_NAME}/${manifest_file}
 def remote_git = "git@${remmote_host}:${group_name}/${manifests_name}.git" //远程git仓库
 def local_git = "git@${local_host}:${group_name}/${manifests_name}.git" //本地git仓库
 def iso_name = "LenovoOpenStack-nfv_dev_4.1T_${mode}_${time}_${BUILD_ID}.iso"
+
+def build = currentBuild.rawBuild
+def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
+def user_name = cause.getUserName()
 
 pipeline {
     // agent {label 'slave-1'}
@@ -48,7 +52,7 @@ pipeline {
         }
         stage('scp iso'){
             steps{
-                sh "scp ${iso_dir}/${iso_name} root@10.100.218.150:/tmp/ && ssh root@10.100.218.150 'echo ${iso_name} >> /tmp/iso_name.log'"
+                sh "scp ${iso_dir}/${iso_name} root@10.100.218.150:/tmp/ && ssh root@10.100.218.150 'echo ${iso_name} ${user_name} >> /tmp/iso_name.log'"
             }
         }
 //        stage('start deploy'){

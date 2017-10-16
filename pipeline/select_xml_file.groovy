@@ -1,5 +1,5 @@
 import org.boon.Boon;
-def manifest_files = "git@10.240.205.131:thinkcloud_ci/manifests.git"
+def manifest_files = "git@10.240.200.5:thinkcloud_ci/manifests.git"
 def execute(cmd){
     def proc = cmd.execute()
     proc.waitFor()
