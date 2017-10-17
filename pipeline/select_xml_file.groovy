@@ -1,5 +1,6 @@
 import org.boon.Boon;
-def manifest_files = "git@10.240.200.5:thinkcloud_ci/manifests.git"
+//def manifest_files = "git@git.tclab.lenovo.com:thinkcloud_ci/manifests.git"
+def manifest_files = "git@10.100.218.203:nfv/manifests.git"
 def execute(cmd){
     def proc = cmd.execute()
     proc.waitFor()
@@ -29,7 +30,8 @@ def changeToNeed(tmp_dir,file_list){
     file_name_list = []
     file_list.each{file_path ->
         file_name  = file_path.replace(tmp_dir+"/","")
-        file_name_list.push("FILE_"+file_name)
+//        file_name_list.push("FILE_"+file_name)
+        file_name_list.push(file_name)
     }
     return file_name_list
 }
